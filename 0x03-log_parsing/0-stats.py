@@ -16,49 +16,83 @@ Status codes are printed in ascending order.
 
 import sys
 
-def print_stats(total_size, status_codes):
+def extract_input(input_line):
+    """
+    Extract relevant parts from a log input line.
+
+    Args:
+        input_line (str): A line of log input.
+
+    Returns:
+        tuple: A tuple containing status code (int) and file size (int).
+    """
+    parts = input_line.split()
+    if len(parts) == 10 and parts[8].isdigit():
+        status_code = int(parts[8])
+        file_size = int(parts[9])
+        return status_code, file_size
+    return None, None
+
+def print_statistics(total_file_size, status_codes_stats):
     """
     Print statistics including total file size and lines per status code.
 
     Args:
-        total_size (int): The total file size.
-        status_codes (dict): Dictionary containing status code frequencies.
+        total_file_size (int): The total file size.
+        status_codes_stats (dict): Dictionary containing status code frequencies.
     """
-    print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        print("{}: {}".format(code, status_codes[code]))
+    print("File size: {}".format(total_file_size))
+    for code in sorted(status_codes_stats.keys()):
+        print("{}: {}".format(code, status_codes_stats[code]))
 
-def main():
+def update_metrics(line, total_file_size, status_codes_stats):
     """
-    Read log lines from stdin, compute metrics, and print statistics.
-    """
-    total_size = 0
-    status_codes = {"200": 0, "301": 0, "400": 0, "401": 0,
-                    "403": 0, "404": 0, "405": 0, "500": 0}
-    line_count = 0
+    Update metrics and status code statistics based on a log input line.
 
+    Args:
+        line (str): A line of log input.
+        total_file_size (int): The running total file size.
+        status_codes_stats (dict): Dictionary containing status code frequencies.
+
+    Returns:
+        int: Updated total file size.
+    """
+    status_code, file_size = extract_input(line)
+    if status_code is not None and file_size is not None:
+        total_file_size += file_size
+        if status_code in status_codes_stats:
+            status_codes_stats[status_code] += 1
+    return total_file_size
+
+def run():
+    """
+    Starts the log parser.
+    """
+    line_num = 0
+    total_file_size = 0
+    status_codes_stats = {
+        200: 0,
+        301: 0,
+        400: 0,
+        401: 0,
+        403: 0,
+        404: 0,
+        405: 0,
+        500: 0,
+    }
     try:
-        for line in sys.stdin:
-            line_count += 1
-            tokens = line.split(" ")
-            try:
-                total_size += int(tokens[-1])
-            except:
-                pass
-            try:
-                status_codes[tokens[-2]] += 1
-            except:
-                pass
-            if line_count == 10:
-                print_stats(total_size, status_codes)
-                line_count = 0
-    except KeyboardInterrupt:
-        print_stats(total_size, status_codes)
-        raise
+        while True:
+            line = input()
+            total_file_size = update_metrics(
+                line,
+                total_file_size,
+                status_codes_stats,
+            )
+            line_num += 1
+            if line_num % 10 == 0:
+                print_statistics(total_file_size, status_codes_stats)
+    except (KeyboardInterrupt, EOFError):
+        print_statistics(total_file_size, status_codes_stats)
 
-    print_stats(total_size, status_codes)
-
-
-if __name__ == "__main__":
-    """Main function."""
-    main()
+if __name__ == '__main__':
+    run()
