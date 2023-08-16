@@ -33,5 +33,9 @@ if __name__ == "__main__":
                                "403": 0, "404": 0, "405": 0, "500": 0}
                 file_size = 0
     except KeyboardInterrupt:
-        print_statistics(file_size, status_code)
+        # print_statistics(file_size, status_code)
+        print("File size: {}".format(file_size))
+        for key, value in sorted(status_code.items()):
+            if value != 0:
+                print("{}: {}".format(key, value))
         raise
