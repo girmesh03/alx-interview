@@ -1,7 +1,9 @@
 #!/usr/bin/python3
+""" This module reads stdin line by line and computes metrics """
 import sys
 
 def print_stats(total_size, status_codes):
+    """ Prints a summary of the log file """
     print("File size: {}".format(total_size))
     for code in sorted(status_codes):
         print("{}: {}".format(code, status_codes[code]))
