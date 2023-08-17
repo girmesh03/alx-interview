@@ -5,6 +5,7 @@
 
 import sys
 
+
 def print_statistics(file_size, status_code):
     """Prints the statistics"""
     print("File size: {}".format(file_size))
