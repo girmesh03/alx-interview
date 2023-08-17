@@ -30,5 +30,8 @@ if __name__ == "__main__":
                 print_statistics(file_size, status_code)
         print_statistics(file_size, status_code)
     except KeyboardInterrupt:
-        print_statistics(file_size, status_code)
+        print("File size: {}".format(file_size))
+        for key, value in sorted(status_code.items()):
+            if value != 0:
+                print("{}: {}".format(key, value))
         raise
