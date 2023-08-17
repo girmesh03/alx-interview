@@ -1,48 +1,37 @@
 #!/usr/bin/python3
-"""
-module contains a script that reads stdin line by line and computes metrics
-"""
+"""This module contains a script that reads stdin line by line and computes
+    some statistics."""
+
+
 import sys
 
-
-status_codes = {
-    "200": 0,
-    "301": 0,
-    "400": 0,
-    "401": 0,
-    "403": 0,
-    "404": 0,
-    "405": 0,
-    "500": 0
-}
-
-file_size = 0
-
-
-def print_metrics():
-    """prints of the logs"""
+def print_statistics(file_size, status_code):
+    """Prints the statistics"""
     print("File size: {}".format(file_size))
-    for status in sorted(status_codes.keys()):
-        if status_codes[status]:
-            print("{}: {}".format(status, status_codes[status]))
+    for key, value in sorted(status_code.items()):
+        if value != 0:
+            print("{}: {}".format(key, value))
+
+
+def main():
+    """Main function"""
+    file_size = 0
+    status_code = {"200": 0, "301": 0, "400": 0, "401": 0,
+                   "403": 0, "404": 0, "405": 0, "500": 0}
+    counter = 0
+    try:
+        for line in sys.stdin:
+            counter += 1
+            data = line.split()
+            file_size += int(data[-1])
+            status_code[data[-2]] += 1
+            if counter % 10 == 0:
+                print_statistics(file_size, status_code)
+        print_statistics(file_size, status_code)
+    except KeyboardInterrupt:
+        print_statistics(file_size, status_code)
+        raise
 
 
 if __name__ == "__main__":
-    count = 0
-    try:
-        for line in sys.stdin:
-            try:
-                elems = line.split()
-                file_size += int(elems[-1])
-                if elems[-2] in status_codes:
-                    status_codes[elems[-2]] += 1
-            except Exception:
-                pass
-            if count == 9:
-                print_metrics()
-                count = -1
-            count += 1
-    except KeyboardInterrupt:
-        print_metrics()
-        raise
-    print_metrics()
+    main()
