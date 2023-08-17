@@ -24,7 +24,8 @@ if __name__ == "__main__":
             counter += 1
             data = line.split()
             file_size += int(data[-1])
-            status_code[data[-2]] += 1
+            if data[-2] in status_code:
+                status_code[data[-2]] += 1
             if counter % 10 == 0:
                 print_statistics(file_size, status_code)
         print_statistics(file_size, status_code)
