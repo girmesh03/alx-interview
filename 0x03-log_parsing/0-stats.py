@@ -13,7 +13,6 @@ def print_statistics(file_size, status_code):
             print("{}: {}".format(key, value))
 
 
-
 if __name__ == "__main__":
     file_size = 0
     status_code = {"200": 0, "301": 0, "400": 0, "401": 0,
