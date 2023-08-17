@@ -13,8 +13,8 @@ def print_statistics(file_size, status_code):
             print("{}: {}".format(key, value))
 
 
-def main():
-    """Main function"""
+
+if __name__ == "__main__":
     file_size = 0
     status_code = {"200": 0, "301": 0, "400": 0, "401": 0,
                    "403": 0, "404": 0, "405": 0, "500": 0}
@@ -31,7 +31,3 @@ def main():
     except KeyboardInterrupt:
         print_statistics(file_size, status_code)
         raise
-
-
-if __name__ == "__main__":
-    main()
