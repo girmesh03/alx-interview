@@ -20,7 +20,7 @@ you only need to handle the 8 least significant bits of each integer
 
 
 def validUTF8(data):
-    """Determines if a given data set represents a valid UTF-8 encoding."""
+    """Determines if a given data set represents a valid UTF-8 encoding"""
     num_bytes_to_check = 0
 
     for byte in data:
@@ -34,12 +34,10 @@ def validUTF8(data):
             elif (byte >> 3) == 0b11110:  # 4-byte character
                 num_bytes_to_check = 3
             else:
-                # Invalid starting byte for UTF-8 character
-                return False
+                return False  # Invalid starting byte for UTF-8 character
         else:
             if (byte >> 6) != 0b10:
-                # Continuation byte should start with '10'
-                return False
+                return False  # Continuation byte should start with '10'
             num_bytes_to_check -= 1
     # All expected continuation bytes were found
     return num_bytes_to_check == 0
