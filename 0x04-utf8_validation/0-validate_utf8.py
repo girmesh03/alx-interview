@@ -22,8 +22,9 @@ you only need to handle the 8 least significant bits of each integer
 def validUTF8(data):
     """Determines if a given data set represents a valid UTF-8 encoding"""
     num_bytes_to_check = 0
+    valid_data = [byte & 0xFF for byte in data]
 
-    for byte in data:
+    for byte in valid_data:
         if num_bytes_to_check == 0:
             if (byte >> 7) == 0b0:  # 1-byte character
                 num_bytes_to_check = 0
