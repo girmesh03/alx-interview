@@ -1,67 +1,47 @@
 #!/usr/bin/python3
-"""N queens"""
-
+"""N Queens"""
 import sys
 
+def print_board(board):
+    """Print allocated positions of the queens"""
+    b = [[i, board[i]] for i in range(len(board))]
+    print(b)
 
-def printBoard(board, n):
-    """Prints the board"""
-    res = []
-    for i in range(n):
-        for j in range(n):
-            if board[i][j] == 1:
-                res.append([i, j])
-    print(res)
+def is_position_safe(board, row, col):
+    """Checks if the position is safe for the queen"""
+    for prev_row in range(row):
+        if board[prev_row] == col or \
+           abs(board[prev_row] - col) == abs(prev_row - row):
+            return False
+    return True
 
+def safe_positions(board, row, n):
+    """Find all safe positions where the queen can be allocated"""
+    if row == n:
+        print_board(board)
+    else:
+        for col in range(n):
+            if is_position_safe(board, row, col):
+                board[row] = col
+                safe_positions(board, row + 1, n)
 
-if __name__ == "__main__":
-    """Solves the N queens problem"""
-    if len(sys.argv) != 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-    try:
-        n = int(sys.argv[1])
-    except ValueError:
-        print("N must be a number")
-        sys.exit(1)
-    if n < 4:
-        print("N must be at least 4")
-        sys.exit(1)
+def create_board(size):
+    """Generates the board"""
+    return [0] * size
 
-    board = [[0 for j in range(n)] for i in range(n)]
+if len(sys.argv) != 2:
+    print("Usage: nqueens N")
+    exit(1)
 
-    def isSafe(board, row, col):
-        """Checks if a queen can be placed on board at row, col"""
-        for j in range(col):
-            if board[row][j] == 1:
-                return False
-        i = row
-        j = col
-        while i >= 0 and j >= 0:
-            if board[i][j] == 1:
-                return False
-            i -= 1
-            j -= 1
-        i = row
-        j = col
-        while j >= 0 and i < n:
-            if board[i][j] == 1:
-                return False
-            i = i + 1
-            j = j - 1
-        return True
+try:
+    n = int(sys.argv[1])
+except ValueError:
+    print("N must be a number")
+    exit(1)
 
-    def solveNQUtil(board, col):
-        """Solves the N queens problem using Backtracking"""
-        if col == n:
-            printBoard(board, n)
-            return True
-        res = False
-        for i in range(n):
-            if isSafe(board, i, col):
-                board[i][col] = 1
-                res = solveNQUtil(board, col + 1) or res
-                board[i][col] = 0
-        return res
+if n < 4:
+    print("N must be at least 4")
+    exit(1)
 
-    solveNQUtil(board, 0)
+board = create_board(n)
+safe_positions(board, 0, n)
