@@ -20,7 +20,7 @@ def solveNQueens(n):
             return  # backtracking
         for i in range(len(queens)):
             if not col_diff[i] and not \
-            diag_diff[index - i] and not diag_sum[index + i]:
+                    diag_diff[index - i] and not diag_sum[index + i]:
                 queens[index] = i
                 col_diff[i] = 1
                 diag_diff[index - i] = 1
@@ -31,7 +31,7 @@ def solveNQueens(n):
                 diag_sum[index + i] = 0
 
     dfs(0)
-    return [[[row, col] for row, col in enumerate(queens)] \
+    return [[[row, col] for row, col in enumerate(queens)]
             for queens in res]
 
 
